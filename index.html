@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Tri-Fold Pawn Maker</title>
+    <title>The Bi-Fold Pawn Maker</title>
     <style>
         body {
             font-family: system-ui, -apple-system, sans-serif;
@@ -30,31 +30,17 @@
             box-sizing: border-box;
         }
 
-        .header-left, .header-right {
-            flex: 1;
-            display: flex;
-        }
-        .header-right {
-            justify-content: flex-end;
-        }
-        .header-titles {
-            flex: 2;
-            text-align: center;
-        }
+        .header-left, .header-right { flex: 1; display: flex; }
+        .header-right { justify-content: flex-end; }
+        .header-titles { flex: 2; text-align: center; }
         .header-titles h1 { margin: 0 0 4px 0; font-size: 22px; color: #fff; }
         .header-titles p { margin: 0; font-size: 13px; color: #aaa; white-space: nowrap; }
 
         /* Header Help Box */
         .header-help {
-            display: flex;
-            flex-wrap: wrap; 
-            gap: 10px;
-            background: #252525;
-            padding: 8px 15px;
-            border-radius: 8px;
-            border: 1px solid #444;
-            font-size: 11px;
-            color: #ccc;
+            display: flex; flex-wrap: wrap; gap: 10px;
+            background: #252525; padding: 8px 15px; border-radius: 8px;
+            border: 1px solid #444; font-size: 11px; color: #ccc;
         }
         .help-item { display: flex; align-items: center; gap: 6px; }
         .help-icon {
@@ -69,64 +55,27 @@
 
         /* Static QR Code */
         .header-qr {
-            height: 50px;
-            width: 50px;
-            background: white;
-            padding: 2px;
-            border-radius: 4px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-            transition: transform 0.2s ease-in-out;
-            transform-origin: top right;
-            cursor: pointer;
+            height: 50px; width: 50px; background: white; padding: 2px;
+            border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            transition: transform 0.2s ease-in-out; transform-origin: top right; cursor: pointer;
         }
-        .header-qr:hover {
-            transform: scale(2.5); 
-            z-index: 200;
-        }
+        .header-qr:hover { transform: scale(2.5); z-index: 200; }
 
         /* Main Workspace styling */
-        .content-wrapper {
-            margin-top: 70px; 
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100vh - 70px);
-            align-items: center;
-        }
-
-        .main {
-            flex-grow: 1;
-            padding: 40px 40px 280px 40px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
+        .content-wrapper { margin-top: 70px; display: flex; flex-direction: column; min-height: calc(100vh - 70px); align-items: center; }
+        .main { flex-grow: 1; padding: 40px 40px 280px 40px; display: flex; flex-direction: column; align-items: center; width: 100%; box-sizing: border-box; }
+        
         .page {
-            background: white;
-            width: 8.5in;
-            min-height: 11in;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-            padding: 0.5in;
-            box-sizing: border-box;
-            display: flex;
-            flex-wrap: wrap;
-            align-content: flex-start;
-            gap: 0.25in;
+            background: white; width: 8.5in; min-height: 11in;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6); padding: 0.5in; box-sizing: border-box;
+            display: flex; flex-wrap: wrap; align-content: flex-start; gap: 0.25in;
         }
 
         /* Pawn container & UI */
         .pawn-wrapper {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            background: #f9f9f9;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            width: fit-content;
+            display: flex; flex-direction: column; position: relative;
+            background: #f9f9f9; padding: 12px; border-radius: 6px;
+            border: 1px solid #ddd; width: fit-content;
         }
 
         .action-group-left { position: absolute; top: -10px; left: -10px; display: flex; gap: 6px; z-index: 5; }
@@ -135,8 +84,7 @@
         .circle-btn {
             color: white; border: none; border-radius: 50%; width: 24px; height: 24px;
             cursor: pointer; font-weight: bold; font-size: 14px; display: flex;
-            align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            padding: 0; transition: background 0.2s;
+            align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); padding: 0;
         }
 
         .btn-dup { background: #2ecc71; } .btn-dup:hover { background: #27ae60; }
@@ -147,149 +95,64 @@
 
         .edit-toggle-btn {
             background: #e0e0e0; color: #333; border: 1px solid #ccc; border-radius: 4px;
-            padding: 6px; margin-top: 8px; cursor: pointer; font-size: 12px;
-            font-weight: bold; transition: background 0.2s;
+            padding: 6px; margin-top: 8px; cursor: pointer; font-size: 12px; font-weight: bold;
         }
         .edit-toggle-btn:hover { background: #d0d0d0; }
 
-        .pawn-settings {
-            display: flex; flex-direction: column; gap: 8px; margin-top: 8px;
-            border-top: 1px dashed #ccc; padding-top: 8px;
-        }
+        .pawn-settings { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; border-top: 1px dashed #ccc; padding-top: 8px; }
 
         .pawn-inputs { display: flex; gap: 5px; align-items: center; }
-        .pawn-inputs input, .pawn-inputs select {
-            border: 1px solid #ccc; border-radius: 4px; font-size: 12px;
-            background: white; color: black; height: 30px; box-sizing: border-box;
-        }
+        .pawn-inputs input, .pawn-inputs select { border: 1px solid #ccc; border-radius: 4px; font-size: 12px; background: white; color: black; height: 30px; box-sizing: border-box; }
         .input-name { flex-grow: 1; padding: 6px; }
         .input-number { width: 40px; text-align: center; padding: 6px; }
 
         /* Stats & Trackers */
-        .pawn-stats-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
-            background: #e8e8e8; padding: 8px; border-radius: 4px; border: 1px solid #ccc;
-        }
+        .pawn-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #e8e8e8; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
         .pawn-stats-grid div { display: flex; flex-direction: column; }
         .pawn-stats-grid label { font-size: 10px; font-weight: bold; color: #555; margin-bottom: 2px; }
-        .pawn-stats-grid input {
-            width: 100%; padding: 4px; box-sizing: border-box;
-            border: 1px solid #bbb; border-radius: 2px; font-size: 11px;
-            background: white; color: black;
-        }
+        .pawn-stats-grid input { width: 100%; padding: 4px; box-sizing: border-box; border: 1px solid #bbb; border-radius: 2px; font-size: 11px; background: white; color: black; }
 
         .pawn-trackers { display: flex; gap: 8px; align-items: center; font-size: 11px; color: #333; background: #e8e8e8; padding: 6px 8px; border-radius: 4px; border: 1px solid #ccc; flex-wrap: wrap;}
         .pawn-trackers label { display: flex; align-items: center; gap: 4px; font-weight: bold; }
-        .pawn-trackers input { width: 45px; text-align: center; padding: 4px; border: 1px solid #bbb; border-radius: 2px; font-size: 11px; background: white; color: black; }
+        .pawn-trackers input { width: 40px; text-align: center; padding: 4px; border: 1px solid #bbb; border-radius: 2px; font-size: 11px; background: white; color: black; }
 
-        .pawn-options {
-            display: flex; gap: 12px; align-items: center; font-size: 11px;
-            color: #333; padding: 2px 0; flex-wrap: wrap;
-        }
+        .pawn-options { display: flex; gap: 12px; align-items: center; font-size: 11px; color: #333; padding: 2px 0; flex-wrap: wrap; }
         .pawn-options label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
         .input-color { width: 22px; height: 22px; padding: 0; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
 
         /* Transform Sliders */
-        .pawn-controls {
-            display: flex; flex-direction: column; gap: 4px; background: #eee;
-            padding: 8px; border-radius: 4px; border: 1px solid #ccc;
-        }
+        .pawn-controls { display: flex; flex-direction: column; gap: 4px; background: #eee; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
         .slider-group { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #333; font-weight: bold; }
         .slider-group label { width: 45px; }
         .slider-group input[type="range"] { flex-grow: 1; cursor: pointer; margin: 0; }
-
-        .reset-slider-btn {
-            background: #dcdcdc; color: #333; border: 1px solid #b0b0b0; border-radius: 4px;
-            cursor: pointer; font-size: 12px; padding: 2px 6px; display: flex;
-            align-items: center; justify-content: center; transition: background 0.2s;
-        }
-        .reset-slider-btn:hover { background: #c0c0c0; }
+        .reset-slider-btn { background: #dcdcdc; color: #333; border: 1px solid #b0b0b0; border-radius: 4px; cursor: pointer; font-size: 12px; padding: 2px 6px; }
 
         /* Generic Buttons */
-        button.primary {
-            background: #3498db; color: white; border: none; padding: 12px; cursor: pointer;
-            font-size: 16px; border-radius: 4px; font-weight: bold; width: 100%; box-sizing: border-box;
-        }
+        button.primary { background: #3498db; color: white; border: none; padding: 12px; cursor: pointer; font-size: 16px; border-radius: 4px; font-weight: bold; width: 100%; box-sizing: border-box; }
         button.primary:hover { background: #2980b9; }
-
         button.primary.word-btn { background: #2b579a; font-size: 14px; padding: 10px;}
-        button.primary.word-btn:hover { background: #1a3c6d; }
-
         button.primary.odt-btn { background: #8e44ad; font-size: 14px; padding: 10px;}
-        button.primary.odt-btn:hover { background: #6c3483; }
-
-        button.secondary {
-            background: #555; color: white; border: none; padding: 10px; cursor: pointer;
-            font-size: 14px; border-radius: 4px; font-weight: bold; box-sizing: border-box;
-        }
+        button.secondary { background: #555; color: white; border: none; padding: 10px; cursor: pointer; font-size: 14px; border-radius: 4px; font-weight: bold; box-sizing: border-box; }
         button.secondary:hover { background: #666; }
-
         .btn-row { display: flex; gap: 10px; width: 100%; }
         .btn-row button { flex: 1; }
         .export-col { display: flex; flex-direction: column; gap: 8px; width: 100%; }
 
-        /* Floating Footer Layout */
+        /* Floating Footer */
         .credits-footer {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            display: flex;
-            gap: 20px;
-            width: 100%;
-            padding: 20px 40px;
-            background: #1e1e1e;
-            border-top: 1px solid #444;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.6);
-            justify-content: center;
-            align-items: stretch;
-            z-index: 100;
-            box-sizing: border-box;
-            flex-wrap: wrap;
-            max-height: 35vh;
-            overflow-y: auto;
+            position: fixed; bottom: 0; left: 0; right: 0; display: flex; gap: 20px; width: 100%;
+            padding: 20px 40px; background: #1e1e1e; border-top: 1px solid #444; box-shadow: 0 -4px 15px rgba(0,0,0,0.6);
+            justify-content: center; align-items: stretch; z-index: 100; box-sizing: border-box; flex-wrap: wrap; max-height: 35vh; overflow-y: auto;
         }
-
-        .footer-col {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            flex: 1;
-            min-width: 180px;
-            max-width: 280px;
-        }
-
-        .footer-block {
-            background: #2a2a2a;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            height: 100%;
-            box-sizing: border-box;
-        }
+        .footer-col { display: flex; flex-direction: column; gap: 15px; flex: 1; min-width: 180px; max-width: 280px; }
+        .footer-block { background: #2a2a2a; padding: 15px; border-radius: 8px; border: 1px solid #333; display: flex; flex-direction: column; gap: 10px; height: 100%; box-sizing: border-box; }
         .footer-block label { font-weight: bold; color: #fff; font-size: 13px; }
 
-        .credits-box {
-            background: #252525;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #444;
-            font-size: 12px;
-            color: #aaa;
-            line-height: 1.5;
-            text-align: center;
-            height: 100%;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .credits-box { background: #252525; padding: 15px; border-radius: 8px; border: 1px solid #444; font-size: 12px; color: #aaa; line-height: 1.5; text-align: center; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
         .credits-box h3 { margin: 0 0 8px 0; font-size: 14px; color: #fff; }
         .credits-box a { color: #3498db; text-decoration: none; font-weight: bold; }
-        .credits-box a:hover { text-decoration: underline; color: #5dade2; }
-        .credits-box .tip-jar { display: inline-block; margin-top: 8px; padding: 6px 12px; background: #e67e22; color: white; border-radius: 4px; text-decoration: none; font-weight: bold; }
-        .credits-box .tip-jar:hover { background: #d35400; text-decoration: none; }
+        .credits-box a:hover { text-decoration: underline; }
+        .credits-box .tip-jar { display: inline-block; margin-top: 8px; padding: 6px 12px; background: #e67e22; color: white; border-radius: 4px; }
 
         /* Print Settings */
         @media print {
@@ -315,12 +178,10 @@
                 <div class="help-item"><span class="help-icon icon-paste">P</span> Paste</div>
             </div>
         </div>
-        
         <div class="header-titles">
-            <h1>The Tri-Fold Pawn Maker</h1>
-            <p>Triangular standees with individual layering, border, stats, and text controls.</p>
+            <h1>The Bi-Fold Pawn Maker</h1>
+            <p>Inverted-T standees folded across the top. Features trackers, stats, and silhouette mirroring.</p>
         </div>
-
         <div class="header-right"></div>
     </header>
 
@@ -341,7 +202,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="footer-col">
                 <div class="footer-block">
                     <label>2. Save / Load Project</label>
@@ -353,7 +213,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="footer-col">
                 <div class="credits-box">
                     <h3>Inspired By Whitebeard</h3>
@@ -361,7 +220,6 @@
                     <a href="https://ko-fi.com/whitebeard" target="_blank" class="tip-jar">☕ Drop a tip in their jar!</a>
                 </div>
             </div>
-
             <div class="footer-col">
                 <div class="footer-block">
                     <label>3. Print & Export</label>
@@ -387,8 +245,8 @@
             'busey': { w: 1.25, h: 1.875, label: 'Busey (1.25")' },
             'boss': { w: 2.0, h: 3.0, label: 'Boss (2")' },
             'malkovich': { w: 2.5, h: 3.75, label: 'Malkovich (2.5")' },
-            'epic': { w: 3.0, h: 4.5, label: 'Epic (3")' },
-            'legendary': { w: 2.6, h: 10.0, label: 'Legendary (Full Page)' }
+            'epic': { w: 3.0, h: 4.0, label: 'Epic (3")' },
+            'legendary': { w: 3.5, h: 4.5, label: 'Legendary (Full Page)' }
         };
 
         const pageEl = document.getElementById('page');
@@ -402,15 +260,12 @@
             handleFiles({ target: { files: e.dataTransfer.files } });
         });
 
-        // Global Paste Listener (Ctrl+V / Cmd+V)
         window.addEventListener('paste', e => {
             const items = (e.clipboardData || e.originalEvent.clipboardData).items;
             const files = [];
             for (let index in items) {
                 const item = items[index];
-                if (item.kind === 'file' && item.type.startsWith('image/')) {
-                    files.push(item.getAsFile());
-                }
+                if (item.kind === 'file' && item.type.startsWith('image/')) files.push(item.getAsFile());
             }
             if (files.length > 0) handleFiles({ target: { files: files } });
         });
@@ -455,7 +310,9 @@
 
                 state.pawns.push({
                     img: img, dataUrl: dataUrl, name: '', number: '', isEditing: false,
-                    size: 'monster', statsOnBack: true, trackers: { legRes: 0, focus: 0, investiture: 0 },
+                    size: 'monster', statsOnBack: true, 
+                    hasFrontTail: true, hasBackTail: true,
+                    trackers: { legRes: 0, focus: 0, investiture: 0 },
                     isDark: calculateDarkness(img), isFlipped: false, showBorder: false, 
                     borderColor: '#000000', textColor: '#000000', textBgColor: '#FFFFFFEE',
                     scale: 1.0, rotation: 0, offsetX: 0, offsetY: 0,
@@ -491,27 +348,19 @@
         function duplicatePawn(index) {
             const original = state.pawns[index];
             let newNumber = original.number;
-
             if (newNumber && newNumber.trim() !== '' && !isNaN(newNumber)) {
                 let targetNum = parseInt(newNumber, 10) + 1;
-                while (state.pawns.some(p => p.dataUrl === original.dataUrl && p.name === original.name && parseInt(p.number, 10) === targetNum)) {
-                    targetNum++;
-                }
+                while (state.pawns.some(p => p.dataUrl === original.dataUrl && p.name === original.name && parseInt(p.number, 10) === targetNum)) targetNum++;
                 newNumber = targetNum.toString();
             }
-
-            const copy = { 
-                ...original, number: newNumber, isEditing: false, 
-                stats: { ...original.stats }, trackers: { ...original.trackers } 
-            }; 
-            state.pawns.push(copy);
-            renderAll();
+            const copy = { ...original, number: newNumber, isEditing: false, stats: { ...original.stats }, trackers: { ...original.trackers } }; 
+            state.pawns.push(copy); renderAll();
         }
 
         function copyStyle(index) {
             const p = state.pawns[index];
             styleClipboard = {
-                size: p.size, statsOnBack: p.statsOnBack,
+                size: p.size, statsOnBack: p.statsOnBack, hasFrontTail: p.hasFrontTail, hasBackTail: p.hasBackTail,
                 borderColor: p.borderColor, textColor: p.textColor, textBgColor: p.textBgColor,
                 showBorder: p.showBorder, isDark: p.isDark, isFlipped: p.isFlipped,
                 scale: p.scale, rotation: p.rotation, offsetX: p.offsetX, offsetY: p.offsetY
@@ -529,13 +378,8 @@
             state.pawns[index].isEditing = !state.pawns[index].isEditing;
             const settingsDiv = document.getElementById(`settings-${index}`);
             const editBtn = document.getElementById(`edit-btn-${index}`);
-            if (state.pawns[index].isEditing) {
-                settingsDiv.style.display = 'flex';
-                editBtn.innerHTML = '▲ Hide Controls';
-            } else {
-                settingsDiv.style.display = 'none';
-                editBtn.innerHTML = '▼ Edit Controls';
-            }
+            if (state.pawns[index].isEditing) { settingsDiv.style.display = 'flex'; editBtn.innerHTML = '▲ Hide Controls'; } 
+            else { settingsDiv.style.display = 'none'; editBtn.innerHTML = '▼ Edit Controls'; }
         }
 
         function updatePawnValue(index, field, value) {
@@ -543,21 +387,12 @@
             if (field === 'size') renderAll(); else renderSinglePawn(index);
         }
 
-        function updatePawnStat(index, key, value) {
-            state.pawns[index].stats[key] = value;
-            renderSinglePawn(index);
-        }
+        function updatePawnStat(index, key, value) { state.pawns[index].stats[key] = value; renderSinglePawn(index); }
+        function updatePawnTransform(index, field, value) { state.pawns[index][field] = parseFloat(value); renderSinglePawn(index); }
 
         function updatePawnColor(index, field, value, includeAlpha=false) {
-            if (includeAlpha) {
-                let currentAlpha = state.pawns[index][field].slice(7) || 'EE';
-                state.pawns[index][field] = value + currentAlpha;
-            } else { state.pawns[index][field] = value; }
-            renderSinglePawn(index);
-        }
-
-        function updatePawnTransform(index, field, value) {
-            state.pawns[index][field] = parseFloat(value);
+            if (includeAlpha) state.pawns[index][field] = value + (state.pawns[index][field].slice(7) || 'EE');
+            else state.pawns[index][field] = value;
             renderSinglePawn(index);
         }
 
@@ -574,17 +409,14 @@
             const projectData = {
                 pawns: state.pawns.map(p => ({
                     dataUrl: p.dataUrl, name: p.name, number: p.number, size: p.size,
-                    statsOnBack: p.statsOnBack, trackers: p.trackers,
+                    statsOnBack: p.statsOnBack, hasFrontTail: p.hasFrontTail, hasBackTail: p.hasBackTail, trackers: p.trackers,
                     borderColor: p.borderColor, textColor: p.textColor, textBgColor: p.textBgColor,
                     isDark: p.isDark, isFlipped: p.isFlipped, showBorder: p.showBorder, 
-                    scale: p.scale, rotation: p.rotation, offsetX: p.offsetX, offsetY: p.offsetY,
-                    stats: p.stats
+                    scale: p.scale, rotation: p.rotation, offsetX: p.offsetX, offsetY: p.offsetY, stats: p.stats
                 }))
             };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(projectData));
-            const a = document.createElement('a'); a.href = dataStr; 
-            a.download = getExportFilename('.json');
-            document.body.appendChild(a); a.click(); a.remove();
+            const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(projectData));
+            a.download = getExportFilename('.json'); document.body.appendChild(a); a.click(); a.remove();
         }
 
         async function loadProjectFromJSON(projectData) {
@@ -592,19 +424,18 @@
             for (let p of projectData.pawns) {
                 const img = new Image(); 
                 await new Promise(r => { img.onload = r; img.src = p.dataUrl; });
-                
-                const safeStats = {};
-                STAT_KEYS.forEach(key => safeStats[key] = (p.stats || {})[key] || '');
+                const safeStats = {}; STAT_KEYS.forEach(key => safeStats[key] = (p.stats || {})[key] || '');
 
                 state.pawns.push({
                     img: img, dataUrl: p.dataUrl, name: p.name || '', number: p.number || '', isEditing: false,
                     size: p.size || 'monster', statsOnBack: p.statsOnBack !== undefined ? p.statsOnBack : true,
+                    hasFrontTail: p.hasFrontTail !== undefined ? p.hasFrontTail : true,
+                    hasBackTail: p.hasBackTail !== undefined ? p.hasBackTail : true,
                     trackers: p.trackers || { legRes: 0, focus: 0, investiture: 0 },
                     borderColor: p.borderColor || '#000000', textColor: p.textColor || '#000000', textBgColor: p.textBgColor || '#FFFFFFEE',
                     isDark: p.isDark !== undefined ? p.isDark : calculateDarkness(img),
                     isFlipped: p.isFlipped || false, showBorder: p.showBorder || false,
-                    scale: p.scale || 1.0, rotation: p.rotation || 0, offsetX: p.offsetX || 0, offsetY: p.offsetY || 0,
-                    stats: safeStats
+                    scale: p.scale || 1.0, rotation: p.rotation || 0, offsetX: p.offsetX || 0, offsetY: p.offsetY || 0, stats: safeStats
                 });
             }
             renderAll();
@@ -613,53 +444,41 @@
         async function handleFileLoad(e) {
             const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
-            reader.onload = async (event) => {
-                try { await loadProjectFromJSON(JSON.parse(event.target.result)); } 
-                catch (error) { alert('Error loading project.'); }
-            };
+            reader.onload = async (event) => { try { await loadProjectFromJSON(JSON.parse(event.target.result)); } catch (err) { alert('Error loading project.'); } };
             reader.readAsText(file); e.target.value = ''; 
         }
 
         function handlePrint() {
             if (state.pawns.length === 0) { alert("Please add at least one pawn before printing."); return; }
-            const originalTitle = document.title;
-            document.title = getExportFilename('');
-            window.print();
-            setTimeout(() => { document.title = originalTitle; }, 500);
+            const originalTitle = document.title; document.title = getExportFilename('');
+            window.print(); setTimeout(() => { document.title = originalTitle; }, 500);
         }
 
         function exportWord() {
-            if (state.pawns.length === 0) { alert("Please add at least one pawn before exporting."); return; }
-            let htmlContent = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head><meta charset="utf-8"><title>Pawns Export</title>
-                <style>@page { margin: 0.5in; size: letter portrait; } body { margin: 0; padding: 0; font-family: Arial, sans-serif; } img { margin: 0 0.25in 0.25in 0; display: inline-block; }</style>
-                </head><body>
-            `;
-            state.pawns.forEach((pawn, index) => {
-                const canvas = document.getElementById(`canvas-container-${index}`).querySelector('canvas');
+            if (state.pawns.length === 0) return;
+            let htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset="utf-8"><title>Pawns Export</title><style>@page { margin: 0.5in; size: letter portrait; } body { margin: 0; padding: 0; font-family: Arial, sans-serif; } img { margin: 0 0.25in 0.25in 0; display: inline-block; }</style></head><body>`;
+            state.pawns.forEach((p, i) => {
+                const canvas = document.getElementById(`canvas-container-${i}`).querySelector('canvas');
                 if (canvas) {
-                    const wInches = parseFloat(canvas.style.width); const hInches = parseFloat(canvas.style.height);
-                    htmlContent += `<img src="${canvas.toDataURL('image/png')}" width="${Math.round(wInches * 96)}" height="${Math.round(hInches * 96)}" style="width:${wInches}in; height:${hInches}in;" />`;
+                    const w = parseFloat(canvas.style.width); const h = parseFloat(canvas.style.height);
+                    htmlContent += `<img src="${canvas.toDataURL('image/png')}" width="${Math.round(w * 96)}" height="${Math.round(h * 96)}" style="width:${w}in; height:${h}in;" />`;
                 }
             });
             htmlContent += `</body></html>`;
             const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-            a.download = getExportFilename('.doc'); document.body.appendChild(a); a.click(); a.remove();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = getExportFilename('.doc'); document.body.appendChild(a); a.click(); a.remove();
         }
 
         function exportODT() {
-            if (state.pawns.length === 0) { alert("Please add at least one pawn before exporting."); return; }
+            if (state.pawns.length === 0) return;
             let xmlContent = `<?xml version="1.0" encoding="UTF-8"?><office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" office:mimetype="application/vnd.oasis.opendocument.text"><office:body><office:text><text:p>`;
-            state.pawns.forEach((pawn, index) => {
-                const canvas = document.getElementById(`canvas-container-${index}`).querySelector('canvas');
+            state.pawns.forEach((p, i) => {
+                const canvas = document.getElementById(`canvas-container-${i}`).querySelector('canvas');
                 if (canvas) xmlContent += `<draw:frame svg:width="${canvas.style.width}" svg:height="${canvas.style.height}"><draw:image><office:binary-data>${canvas.toDataURL('image/png').split(',')[1]}</office:binary-data></draw:image></draw:frame><text:s text:c="2"/>`; 
             });
             xmlContent += `</text:p></office:text></office:body></office:document>`;
             const blob = new Blob([xmlContent], { type: 'application/vnd.oasis.opendocument.text' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-            a.download = getExportFilename('.odt'); document.body.appendChild(a); a.click(); a.remove();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = getExportFilename('.odt'); document.body.appendChild(a); a.click(); a.remove();
         }
 
         function createSliderGroup(index, labelTxt, field, min, max, step, defaultValue) {
@@ -668,11 +487,9 @@
             const slider = document.createElement('input'); slider.type = 'range';
             slider.min = min; slider.max = max; slider.step = step; slider.value = state.pawns[index][field];
             slider.oninput = (e) => updatePawnTransform(index, field, e.target.value);
-            const resetBtn = document.createElement('button');
-            resetBtn.className = 'reset-slider-btn'; resetBtn.innerHTML = '↺'; resetBtn.title = 'Reset Setting';
+            const resetBtn = document.createElement('button'); resetBtn.className = 'reset-slider-btn'; resetBtn.innerHTML = '↺'; 
             resetBtn.onclick = () => { slider.value = defaultValue; updatePawnTransform(index, field, defaultValue); };
-            group.appendChild(label); group.appendChild(slider); group.appendChild(resetBtn);
-            return group;
+            group.appendChild(label); group.appendChild(slider); group.appendChild(resetBtn); return group;
         }
 
         function renderAll() {
@@ -681,120 +498,72 @@
                 const wrapper = document.createElement('div'); wrapper.className = 'pawn-wrapper'; wrapper.id = `pawn-wrapper-${index}`;
                 
                 const leftActions = document.createElement('div'); leftActions.className = 'action-group-left';
-                const dupBtn = document.createElement('button'); dupBtn.className = 'circle-btn btn-dup'; dupBtn.innerHTML = '+';
-                dupBtn.title = 'Duplicate Pawn'; dupBtn.onclick = () => duplicatePawn(index); leftActions.appendChild(dupBtn);
-                const copyBtn = document.createElement('button'); copyBtn.className = 'circle-btn btn-copy'; copyBtn.innerHTML = 'C';
-                copyBtn.title = 'Copy Style'; copyBtn.onclick = () => copyStyle(index); leftActions.appendChild(copyBtn);
-                const pasteBtn = document.createElement('button'); pasteBtn.className = 'circle-btn btn-paste'; pasteBtn.innerHTML = 'P';
-                pasteBtn.title = 'Paste Style'; pasteBtn.disabled = styleClipboard === null; pasteBtn.onclick = () => pasteStyle(index);
-                leftActions.appendChild(pasteBtn);
+                const dupBtn = document.createElement('button'); dupBtn.className = 'circle-btn btn-dup'; dupBtn.innerHTML = '+'; dupBtn.onclick = () => duplicatePawn(index); leftActions.appendChild(dupBtn);
+                const copyBtn = document.createElement('button'); copyBtn.className = 'circle-btn btn-copy'; copyBtn.innerHTML = 'C'; copyBtn.onclick = () => copyStyle(index); leftActions.appendChild(copyBtn);
+                const pasteBtn = document.createElement('button'); pasteBtn.className = 'circle-btn btn-paste'; pasteBtn.innerHTML = 'P'; pasteBtn.disabled = styleClipboard === null; pasteBtn.onclick = () => pasteStyle(index); leftActions.appendChild(pasteBtn);
                 wrapper.appendChild(leftActions);
 
                 const rightActions = document.createElement('div'); rightActions.className = 'action-group-right';
-                const delBtn = document.createElement('button'); delBtn.className = 'circle-btn btn-del'; delBtn.innerHTML = '×';
-                delBtn.title = 'Remove Pawn'; delBtn.onclick = () => removePawn(index); 
-                rightActions.appendChild(delBtn); wrapper.appendChild(rightActions);
+                const delBtn = document.createElement('button'); delBtn.className = 'circle-btn btn-del'; delBtn.innerHTML = '×'; delBtn.onclick = () => removePawn(index); rightActions.appendChild(delBtn); wrapper.appendChild(rightActions);
 
-                const canvasContainer = document.createElement('div'); canvasContainer.id = `canvas-container-${index}`;
-                wrapper.appendChild(canvasContainer);
+                const canvasContainer = document.createElement('div'); canvasContainer.id = `canvas-container-${index}`; wrapper.appendChild(canvasContainer);
 
                 const editBtn = document.createElement('button'); editBtn.className = 'edit-toggle-btn'; editBtn.id = `edit-btn-${index}`;
-                editBtn.innerHTML = pawn.isEditing ? '▲ Hide Controls' : '▼ Edit Controls';
-                editBtn.onclick = () => toggleEdit(index); wrapper.appendChild(editBtn);
+                editBtn.innerHTML = pawn.isEditing ? '▲ Hide Controls' : '▼ Edit Controls'; editBtn.onclick = () => toggleEdit(index); wrapper.appendChild(editBtn);
 
-                const settingsDiv = document.createElement('div'); settingsDiv.className = 'pawn-settings';
-                settingsDiv.id = `settings-${index}`; settingsDiv.style.display = pawn.isEditing ? 'flex' : 'none';
+                const settingsDiv = document.createElement('div'); settingsDiv.className = 'pawn-settings'; settingsDiv.id = `settings-${index}`; settingsDiv.style.display = pawn.isEditing ? 'flex' : 'none';
 
-                // Size & Identity
+                // Identity & Size
                 const inputs = document.createElement('div'); inputs.className = 'pawn-inputs';
-                const nameInput = document.createElement('input'); nameInput.type = 'text'; nameInput.className = 'input-name';
-                nameInput.placeholder = 'Name...'; nameInput.value = pawn.name; nameInput.oninput = (e) => updatePawnValue(index, 'name', e.target.value);
-                const numInput = document.createElement('input'); numInput.type = 'text'; numInput.className = 'input-number';
-                numInput.placeholder = '#'; numInput.value = pawn.number; numInput.oninput = (e) => updatePawnValue(index, 'number', e.target.value);
-                
+                const nameInput = document.createElement('input'); nameInput.type = 'text'; nameInput.className = 'input-name'; nameInput.placeholder = 'Name...'; nameInput.value = pawn.name; nameInput.oninput = (e) => updatePawnValue(index, 'name', e.target.value);
+                const numInput = document.createElement('input'); numInput.type = 'text'; numInput.className = 'input-number'; numInput.placeholder = '#'; numInput.value = pawn.number; numInput.oninput = (e) => updatePawnValue(index, 'number', e.target.value);
                 const sizeSelect = document.createElement('select'); sizeSelect.style.width = 'auto'; sizeSelect.style.padding = '4px';
                 for (const [key, val] of Object.entries(SIZES)) {
-                    const opt = document.createElement('option');
-                    opt.value = key; opt.innerText = val.label;
-                    if (pawn.size === key) opt.selected = true;
-                    sizeSelect.appendChild(opt);
+                    const opt = document.createElement('option'); opt.value = key; opt.innerText = val.label;
+                    if (pawn.size === key) opt.selected = true; sizeSelect.appendChild(opt);
                 }
                 sizeSelect.onchange = (e) => updatePawnValue(index, 'size', e.target.value);
-
                 inputs.appendChild(nameInput); inputs.appendChild(numInput); inputs.appendChild(sizeSelect); settingsDiv.appendChild(inputs);
 
                 // Stats Grid
                 const statsContainer = document.createElement('div'); statsContainer.className = 'pawn-stats-grid';
                 STAT_KEYS.forEach(key => {
-                    const statWrapper = document.createElement('div');
-                    const statLabel = document.createElement('label'); statLabel.innerText = key;
-                    const statInput = document.createElement('input'); statInput.type = 'text';
-                    statInput.value = pawn.stats[key]; statInput.placeholder = '-';
-                    statInput.oninput = (e) => updatePawnStat(index, key, e.target.value);
-                    statWrapper.appendChild(statLabel); statWrapper.appendChild(statInput);
-                    statsContainer.appendChild(statWrapper);
+                    const statWrapper = document.createElement('div'); const statLabel = document.createElement('label'); statLabel.innerText = key;
+                    const statInput = document.createElement('input'); statInput.type = 'text'; statInput.value = pawn.stats[key]; statInput.placeholder = '-'; statInput.oninput = (e) => updatePawnStat(index, key, e.target.value);
+                    statWrapper.appendChild(statLabel); statWrapper.appendChild(statInput); statsContainer.appendChild(statWrapper);
                 });
                 settingsDiv.appendChild(statsContainer);
 
-                // Trackers Grid
-                const trackersRow = document.createElement('div'); trackersRow.className = 'pawn-trackers';
-                trackersRow.innerHTML = `<span style="margin-right:8px;"><strong>Base Trackers:</strong></span>`;
+                // Trackers
+                const trackersRow = document.createElement('div'); trackersRow.className = 'pawn-trackers'; trackersRow.innerHTML = `<span style="margin-right:8px;"><strong>Base Trackers:</strong></span>`;
                 const createTrackerInput = (label, field) => {
                     const lbl = document.createElement('label'); lbl.innerText = label; 
-                    const inp = document.createElement('input'); inp.type = 'number'; inp.min = '0'; inp.max = '20';
-                    inp.value = pawn.trackers[field] || ''; inp.placeholder = '0';
+                    const inp = document.createElement('input'); inp.type = 'number'; inp.min = '0'; inp.max = '20'; inp.value = pawn.trackers[field] || ''; inp.placeholder = '0';
                     inp.oninput = (e) => { pawn.trackers[field] = parseInt(e.target.value) || 0; renderSinglePawn(index); };
                     lbl.prepend(inp); return lbl;
                 };
-                trackersRow.appendChild(createTrackerInput('Leg.Res', 'legRes'));
-                trackersRow.appendChild(createTrackerInput('Focus', 'focus'));
-                trackersRow.appendChild(createTrackerInput('Invest.', 'investiture'));
+                trackersRow.appendChild(createTrackerInput('Leg.Res', 'legRes')); trackersRow.appendChild(createTrackerInput('Focus', 'focus')); trackersRow.appendChild(createTrackerInput('Invest.', 'investiture'));
                 settingsDiv.appendChild(trackersRow);
 
                 // Colors
                 const optionsRow = document.createElement('div'); optionsRow.className = 'pawn-options';
-                const borderHexLabel = document.createElement('label');
-                const borderHexInput = document.createElement('input'); borderHexInput.type = 'color'; borderHexInput.className = 'input-color';
-                borderHexInput.value = pawn.borderColor; borderHexInput.oninput = (e) => updatePawnColor(index, 'borderColor', e.target.value);
-                borderHexLabel.appendChild(borderHexInput); borderHexLabel.appendChild(document.createTextNode('Border/X'));
-
-                const textHexLabel = document.createElement('label');
-                const textHexInput = document.createElement('input'); textHexInput.type = 'color'; textHexInput.className = 'input-color';
-                textHexInput.value = pawn.textColor; textHexInput.oninput = (e) => updatePawnColor(index, 'textColor', e.target.value);
-                textHexLabel.appendChild(textHexInput); textHexLabel.appendChild(document.createTextNode('Text'));
-
-                const textBgHexLabel = document.createElement('label');
-                const textBgHexInput = document.createElement('input'); textBgHexInput.type = 'color'; textBgHexInput.className = 'input-color';
-                textBgHexInput.value = pawn.textBgColor.slice(0,7); textBgHexInput.oninput = (e) => updatePawnColor(index, 'textBgColor', e.target.value, true); 
-                textBgHexLabel.appendChild(textBgHexInput); textBgHexLabel.appendChild(document.createTextNode('T-Bg'));
-
-                optionsRow.appendChild(borderHexLabel); optionsRow.appendChild(textHexLabel); optionsRow.appendChild(textBgHexLabel);
+                const addColor = (lbl, field, alpha) => {
+                    const label = document.createElement('label'); const inp = document.createElement('input'); inp.type = 'color'; inp.className = 'input-color';
+                    inp.value = alpha ? pawn[field].slice(0,7) : pawn[field]; inp.oninput = (e) => updatePawnColor(index, field, e.target.value, alpha);
+                    label.appendChild(inp); label.appendChild(document.createTextNode(lbl)); optionsRow.appendChild(label);
+                };
+                addColor('Border/X', 'borderColor', false); addColor('Text', 'textColor', false); addColor('T-Bg', 'textBgColor', true);
                 settingsDiv.appendChild(optionsRow);
 
                 // Toggles
                 const checksRow = document.createElement('div'); checksRow.className = 'pawn-options'; checksRow.style.paddingTop = '0';
-                
-                const borderLabel = document.createElement('label');
-                const borderCheckbox = document.createElement('input'); borderCheckbox.type = 'checkbox';
-                borderCheckbox.checked = pawn.showBorder; borderCheckbox.onchange = (e) => updatePawnValue(index, 'showBorder', e.target.checked);
-                borderLabel.appendChild(borderCheckbox); borderLabel.appendChild(document.createTextNode("Draw Border"));
-
-                const darkLabel = document.createElement('label');
-                const darkCheckbox = document.createElement('input'); darkCheckbox.type = 'checkbox';
-                darkCheckbox.checked = pawn.isDark; darkCheckbox.onchange = (e) => updatePawnValue(index, 'isDark', e.target.checked);
-                darkLabel.appendChild(darkCheckbox); darkLabel.appendChild(document.createTextNode("'X' Base"));
-
-                const flipLabel = document.createElement('label');
-                const flipCheckbox = document.createElement('input'); flipCheckbox.type = 'checkbox';
-                flipCheckbox.checked = pawn.isFlipped; flipCheckbox.onchange = (e) => updatePawnValue(index, 'isFlipped', e.target.checked);
-                flipLabel.appendChild(flipCheckbox); flipLabel.appendChild(document.createTextNode("Flip Image"));
-
-                const statsBackLabel = document.createElement('label');
-                const statsBackCheckbox = document.createElement('input'); statsBackCheckbox.type = 'checkbox';
-                statsBackCheckbox.checked = pawn.statsOnBack; statsBackCheckbox.onchange = (e) => updatePawnValue(index, 'statsOnBack', e.target.checked);
-                statsBackLabel.appendChild(statsBackCheckbox); statsBackLabel.appendChild(document.createTextNode("Stats on Back"));
-                
-                checksRow.appendChild(borderLabel); checksRow.appendChild(darkLabel); checksRow.appendChild(flipLabel); checksRow.appendChild(statsBackLabel);
+                const addCheck = (lbl, field) => {
+                    const label = document.createElement('label'); const inp = document.createElement('input'); inp.type = 'checkbox';
+                    inp.checked = pawn[field]; inp.onchange = (e) => updatePawnValue(index, field, e.target.checked);
+                    label.appendChild(inp); label.appendChild(document.createTextNode(lbl)); checksRow.appendChild(label);
+                };
+                addCheck('Draw Border', 'showBorder'); addCheck('Shadow/X Back', 'isDark'); addCheck('Flip Image', 'isFlipped'); 
+                addCheck('Stats on Back', 'statsOnBack'); addCheck('Front Tab', 'hasFrontTail'); addCheck('Back Tab', 'hasBackTail');
                 settingsDiv.appendChild(checksRow);
 
                 // Controls
@@ -805,192 +574,143 @@
                 controls.appendChild(createSliderGroup(index, 'Y-Pos', 'offsetY', -300, 300, 2, 0));
                 settingsDiv.appendChild(controls);
 
-                wrapper.appendChild(settingsDiv);
-                pageEl.appendChild(wrapper);
-                renderSinglePawn(index);
+                wrapper.appendChild(settingsDiv); pageEl.appendChild(wrapper); renderSinglePawn(index);
             });
         }
 
         function renderSinglePawn(index) {
-            const pawn = state.pawns[index];
-            const container = document.getElementById(`canvas-container-${index}`);
-            if (!container) return;
-            container.innerHTML = ''; container.appendChild(drawPawnCanvas(pawn));
+            const pawn = state.pawns[index]; const container = document.getElementById(`canvas-container-${index}`);
+            if (!container) return; container.innerHTML = ''; container.appendChild(drawPawnCanvas(pawn));
         }
 
         function drawPawnCanvas(pawn) {
             const canvas = document.createElement('canvas');
-            const printDPI = 300; const tabWidthInches = 0.25; const panels = 3;
-            
+            const printDPI = 300;
             const pSize = SIZES[pawn.size] || SIZES['monster'];
-            const internalTabWidth = tabWidthInches * printDPI; 
-            const internalPanelWidth = pSize.w * printDPI;
-            const internalWidth = (internalPanelWidth * panels) + internalTabWidth; 
-            const internalHeight = pSize.h * printDPI;
+            
+            const panelW = pSize.w * printDPI;
+            const panelH = pSize.h * printDPI;
+            const tailH = 0.75 * printDPI; 
 
-            canvas.width = internalWidth; canvas.height = internalHeight;
-            canvas.style.width = (pSize.w * panels + tabWidthInches) + "in"; canvas.style.height = pSize.h + "in";
+            const backTailH = pawn.hasBackTail ? tailH : 0;
+            const frontTailH = pawn.hasFrontTail ? tailH : 0;
+
+            const totalW = panelW;
+            const totalH = backTailH + (panelH * 2) + frontTailH;
+
+            canvas.width = totalW; canvas.height = totalH;
+            canvas.style.width = pSize.w + "in"; 
+            canvas.style.height = (totalH / printDPI) + "in";
 
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = 'white'; ctx.fillRect(0, 0, internalWidth, internalHeight);
-            ctx.strokeStyle = '#888'; ctx.lineWidth = 2; ctx.setLineDash([15, 15]);
+            ctx.fillStyle = 'white'; ctx.fillRect(0, 0, totalW, totalH);
 
-            const textHeight = Math.floor(internalHeight * 0.1); const textPaddingBottom = Math.floor(internalHeight * 0.03);
+            const textHeight = Math.floor(panelH * 0.1); const textPaddingBottom = Math.floor(panelH * 0.03);
             const hasText = pawn.name.trim() !== '' || pawn.number.trim() !== '';
-            const reservedBottom = hasText ? textHeight + textPaddingBottom : 0; 
+            const reservedBottom = hasText ? textHeight + textPaddingBottom : 0;
 
-            for (let i = 0; i < panels; i++) {
-                let xBase = i * internalPanelWidth;
-                ctx.save();
-                
-                const margin = internalHeight * 0.05;
-                const availableHeight = internalHeight - margin - reservedBottom;
+            function drawPanelContent(ctx, isBack) {
+                ctx.beginPath(); ctx.rect(0, 0, panelW, panelH); ctx.clip();
 
-                const autoScale = Math.min(internalPanelWidth / pawn.img.width, availableHeight / pawn.img.height) * 0.95; 
+                const margin = panelH * 0.05;
+                const availableHeight = panelH - margin - reservedBottom;
+                const autoScale = Math.min(panelW / pawn.img.width, availableHeight / pawn.img.height) * 0.95;
                 const finalScale = autoScale * pawn.scale;
                 const w = pawn.img.width * finalScale; const h = pawn.img.height * finalScale;
                 const shiftX = pawn.offsetX * (printDPI / 100); const shiftY = pawn.offsetY * (printDPI / 100);
+
+                const xCenter = panelW / 2;
+                const yCenter = panelH - (h / 2) - (margin / 2) - reservedBottom + shiftY;
+
+                ctx.save();
+                ctx.translate(xCenter, yCenter);
                 
-                const xCenter = xBase + (internalPanelWidth / 2);
-                const yCenter = internalHeight - (h / 2) - (margin / 2) - reservedBottom + shiftY;
+                // Mirror back panel so physical silhouettes line up when folded
+                let shouldFlip = isBack ? !pawn.isFlipped : pawn.isFlipped;
+                if (shouldFlip) ctx.scale(-1, 1);
+                ctx.translate(shiftX, 0); 
+                ctx.rotate((pawn.rotation * Math.PI) / 180);
 
-                ctx.beginPath(); ctx.rect(xBase, 0, internalPanelWidth, internalHeight); ctx.clip();
+                if (isBack && pawn.isDark) ctx.filter = 'brightness(0) opacity(0.3)';
+                ctx.drawImage(pawn.img, -w/2, -h/2, w, h);
+                ctx.restore();
 
-                let shouldFlip = (i === 1) ? !pawn.isFlipped : pawn.isFlipped;
-
-                if (i === 2 && pawn.isDark) {
-                    ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 6; ctx.setLineDash([]);
-                    const p = Math.floor(internalPanelWidth * 0.1); ctx.beginPath();
-                    ctx.moveTo(xBase + p, p); ctx.lineTo(xBase + internalPanelWidth - p, internalHeight - p);
-                    ctx.moveTo(xBase + internalPanelWidth - p, p); ctx.lineTo(xBase + p, internalHeight - p);
-                    ctx.stroke();
-                } else {
-                    ctx.save();
-                    ctx.translate(xCenter, yCenter);
-                    if (shouldFlip) ctx.scale(-1, 1);
-                    ctx.translate(shiftX, 0);
-                    ctx.rotate((pawn.rotation * Math.PI) / 180);
-                    if (i === 2) ctx.filter = 'brightness(0)'; 
-                    
-                    ctx.drawImage(pawn.img, -w/2, -h/2, w, h);
-                    ctx.restore();
+                // Draw X if shadow back is active
+                if (isBack && pawn.isDark) {
+                    ctx.save(); ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 6; ctx.setLineDash([]);
+                    const p = Math.floor(panelW * 0.15); ctx.beginPath();
+                    ctx.moveTo(p, p); ctx.lineTo(panelW - p, panelH - reservedBottom - p);
+                    ctx.moveTo(panelW - p, p); ctx.lineTo(p, panelH - reservedBottom - p); ctx.stroke(); ctx.restore();
                 }
-                ctx.restore(); 
 
-                const drawStatsBlock = () => {
+                if ((isBack && pawn.statsOnBack) || (!isBack && !pawn.statsOnBack)) {
                     const activeStats = STAT_KEYS.filter(key => pawn.stats[key] && pawn.stats[key].trim() !== '');
                     if (activeStats.length > 0) {
                         ctx.save();
-                        const boxW = internalPanelWidth * 0.42; 
-                        const boxH = Math.floor(internalPanelWidth * 0.15); 
-                        const pad = Math.floor(internalPanelWidth * 0.03);
-                        const labelFont = Math.floor(internalPanelWidth * 0.065);
-                        const valFont = Math.floor(internalPanelWidth * 0.08);
-
-                        const startY = internalHeight * 0.08; 
-                        const startX = xBase + (internalPanelWidth - (2 * boxW + pad)) / 2;
-
+                        const boxW = panelW * 0.42; const boxH = Math.floor(panelW * 0.15); const pad = Math.floor(panelW * 0.03);
+                        const startY = panelH * 0.08; const startX = (panelW - (2 * boxW + pad)) / 2;
                         activeStats.forEach((key, idx) => {
-                            const col = idx % 2; const row = Math.floor(idx / 2);
-                            const x = startX + col * (boxW + pad); const y = startY + row * (boxH + pad);
-
+                            const x = startX + (idx % 2) * (boxW + pad); const y = startY + Math.floor(idx / 2) * (boxH + pad);
                             ctx.fillStyle = pawn.textBgColor; ctx.fillRect(x, y, boxW, boxH);
                             ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 3; ctx.setLineDash([]); ctx.strokeRect(x, y, boxW, boxH);
-
-                            ctx.fillStyle = pawn.textColor; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-                            ctx.font = `bold ${labelFont}px sans-serif`; ctx.fillText(key, x + 8, y + boxH/2);
-
-                            ctx.textAlign = 'right'; ctx.font = `bold ${valFont}px sans-serif`;
-                            ctx.fillText(pawn.stats[key], x + boxW - 8, y + boxH/2);
+                            ctx.fillStyle = pawn.textColor; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = `bold ${Math.floor(panelW * 0.065)}px sans-serif`; ctx.fillText(key, x + 8, y + boxH/2);
+                            ctx.textAlign = 'right'; ctx.font = `bold ${Math.floor(panelW * 0.08)}px sans-serif`; ctx.fillText(pawn.stats[key], x + boxW - 8, y + boxH/2);
                         });
                         ctx.restore();
                     }
-                };
-
-                if (i === 1 && pawn.statsOnBack) drawStatsBlock();
-                if (i === 2 && !pawn.statsOnBack) drawStatsBlock();
-
-                // Draw Trackers on Base Panel (i === 2)
-                if (i === 2) {
-                    ctx.save();
-                    let currentY = internalHeight * 0.15;
-                    const drawTrackerRow = (label, count) => {
-                        if (!count || isNaN(count) || count <= 0) return;
-                        ctx.fillStyle = pawn.textColor;
-                        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-                        const fontSize = Math.floor(internalPanelWidth * 0.07);
-                        ctx.font = `bold ${fontSize}px sans-serif`;
-                        ctx.fillText(label, xBase + (internalPanelWidth * 0.08), currentY);
-
-                        const circleRadius = internalPanelWidth * 0.035;
-                        const startX = xBase + internalPanelWidth - (internalPanelWidth * 0.08) - (count * circleRadius * 2.5);
-                        ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 3; ctx.setLineDash([]);
-                        
-                        for(let j=0; j<count; j++) {
-                            ctx.beginPath();
-                            ctx.arc(startX + (j * circleRadius * 2.5) + circleRadius, currentY, circleRadius, 0, Math.PI*2);
-                            ctx.stroke();
-                        }
-                        currentY += circleRadius * 3.5;
-                    };
-
-                    drawTrackerRow("Leg. Resist", parseInt(pawn.trackers.legRes));
-                    drawTrackerRow("Focus", parseInt(pawn.trackers.focus));
-                    drawTrackerRow("Investiture", parseInt(pawn.trackers.investiture));
-                    ctx.restore();
                 }
 
-                if (pawn.showBorder) {
-                    ctx.save();
-                    ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 12; ctx.setLineDash([]);
-                    ctx.strokeRect(xBase + 6, 6, internalPanelWidth - 12, internalHeight - 12);
-                    ctx.restore();
-                }
+                if (pawn.showBorder) { ctx.save(); ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 12; ctx.setLineDash([]); ctx.strokeRect(6, 6, panelW - 12, panelH - 12); ctx.restore(); }
 
-                drawText(ctx, pawn, xBase, internalPanelWidth, internalHeight, reservedBottom, textPaddingBottom);
-
-                if (i < panels - 1) {
-                    ctx.setLineDash([15, 15]); ctx.strokeStyle = '#888'; ctx.lineWidth = 2;
-                    ctx.beginPath(); ctx.moveTo(xBase + internalPanelWidth, 0); ctx.lineTo(xBase + internalPanelWidth, internalHeight); ctx.stroke();
+                if (hasText) {
+                    let txt = pawn.name; if (pawn.number) txt += txt ? ` #${pawn.number}` : `#${pawn.number}`;
+                    if (pawn.textBgColor) { ctx.fillStyle = pawn.textBgColor; ctx.fillRect(0, panelH - reservedBottom, panelW, reservedBottom); }
+                    const fs = Math.floor(panelW * 0.1);
+                    ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.font = `bold ${fs}px sans-serif`;
+                    ctx.lineWidth = Math.floor(fs * 0.2); ctx.strokeStyle = 'white'; ctx.strokeText(txt, panelW / 2, panelH - textPaddingBottom);
+                    ctx.fillStyle = pawn.textColor; ctx.fillText(txt, panelW / 2, panelH - textPaddingBottom);
                 }
             }
 
-            let xTab = panels * internalPanelWidth;
-            ctx.setLineDash([]); ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 4;
-            ctx.beginPath(); ctx.moveTo(xTab, 0); ctx.lineTo(xTab, internalHeight); ctx.stroke();
-            ctx.fillStyle = '#e8e8e8'; ctx.fillRect(xTab, 0, internalTabWidth, internalHeight);
-            
-            ctx.save();
-            ctx.fillStyle = pawn.borderColor; ctx.translate(xTab + internalTabWidth/2, internalHeight/2);
-            ctx.rotate(-Math.PI/2); ctx.textAlign = "center"; ctx.textBaseline = "middle";
-            ctx.font = "bold 28px sans-serif"; ctx.fillText("GLUE", 0, 0);
-            ctx.restore();
-
-            ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 4; ctx.strokeRect(0, 0, internalWidth, internalHeight);
-            return canvas;
-        }
-
-        function drawText(ctx, pawn, xBase, panelWidth, panelHeight, reservedBottom, paddingBottom) {
-            let displayText = pawn.name;
-            if (pawn.number) { displayText += displayText ? ` #${pawn.number}` : `#${pawn.number}`; }
-            if (!displayText) return;
-
-            const x = xBase + panelWidth / 2;
-            const y = panelHeight - paddingBottom;
-            const barHeight = reservedBottom;
-
-            if (pawn.textBgColor) {
-                ctx.save(); ctx.fillStyle = pawn.textBgColor; 
-                ctx.fillRect(xBase, panelHeight - barHeight, panelWidth, barHeight);
+            // 1. Draw Back Tail (Upside Down)
+            if (pawn.hasBackTail) {
+                ctx.save(); ctx.translate(panelW, backTailH); ctx.rotate(Math.PI);
+                ctx.fillStyle = '#e8e8e8'; ctx.fillRect(0, 0, panelW, backTailH);
+                let currentY = tailH * 0.25;
+                const drawTracker = (lbl, count) => {
+                    if (!count || count <= 0) return;
+                    ctx.fillStyle = pawn.textColor; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = `bold ${Math.floor(panelW * 0.07)}px sans-serif`;
+                    ctx.fillText(lbl, panelW * 0.08, currentY);
+                    const r = panelW * 0.035; const startX = panelW - (panelW * 0.08) - (count * r * 2.5);
+                    ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 3; ctx.setLineDash([]);
+                    for(let j=0; j<count; j++) { ctx.beginPath(); ctx.arc(startX + (j * r * 2.5) + r, currentY, r, 0, Math.PI*2); ctx.stroke(); }
+                    currentY += r * 3.5;
+                };
+                drawTracker("Leg. Resist", parseInt(pawn.trackers.legRes)); drawTracker("Focus", parseInt(pawn.trackers.focus)); drawTracker("Investiture", parseInt(pawn.trackers.investiture));
                 ctx.restore();
             }
 
-            ctx.save();
-            const fontSize = Math.floor(panelWidth * 0.1);
-            ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.font = `bold ${fontSize}px sans-serif`;
-            ctx.lineWidth = Math.floor(fontSize * 0.2); ctx.strokeStyle = 'white'; ctx.strokeText(displayText, x, y);
-            ctx.fillStyle = pawn.textColor; ctx.fillText(displayText, x, y);
-            ctx.restore();
+            // 2. Draw Back Panel (Upside Down)
+            ctx.save(); ctx.translate(panelW, backTailH + panelH); ctx.rotate(Math.PI); drawPanelContent(ctx, true); ctx.restore();
+
+            // 3. Draw Front Panel (Upright)
+            ctx.save(); ctx.translate(0, backTailH + panelH); drawPanelContent(ctx, false); ctx.restore();
+
+            // 4. Draw Front Tail (Upright)
+            if (pawn.hasFrontTail) {
+                ctx.save(); ctx.translate(0, backTailH + 2 * panelH);
+                ctx.fillStyle = '#e8e8e8'; ctx.fillRect(0, 0, panelW, frontTailH);
+                ctx.restore();
+            }
+
+            // Fold Lines & Outlines
+            ctx.strokeStyle = '#888'; ctx.lineWidth = 2; ctx.setLineDash([15, 15]);
+            if (pawn.hasBackTail) { ctx.beginPath(); ctx.moveTo(0, backTailH); ctx.lineTo(panelW, backTailH); ctx.stroke(); }
+            ctx.beginPath(); ctx.moveTo(0, backTailH + panelH); ctx.lineTo(panelW, backTailH + panelH); ctx.stroke(); // Center fold
+            if (pawn.hasFrontTail) { ctx.beginPath(); ctx.moveTo(0, backTailH + 2 * panelH); ctx.lineTo(panelW, backTailH + 2 * panelH); ctx.stroke(); }
+
+            ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 4; ctx.setLineDash([]); ctx.strokeRect(0, 0, totalW, totalH);
+            return canvas;
         }
     </script>
 </body>
