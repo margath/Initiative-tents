@@ -132,7 +132,7 @@
         button.primary:hover { background: #2980b9; }
         button.primary.word-btn { background: #2b579a; font-size: 14px; padding: 10px;}
         button.primary.odt-btn { background: #8e44ad; font-size: 14px; padding: 10px;}
-        button.secondary { background: #555; color: white; border: none; padding: 10px; cursor: pointer; font-size: 14px; border-radius: 4px; font-weight: bold; box-sizing: border-box; }
+        button.secondary { background: #555; color: white; border: none; padding: 10px; cursor: pointer; font-size: 14px; border-radius: 4px; font-weight: bold; box-sizing: border-box; width: 100%;}
         button.secondary:hover { background: #666; }
         .btn-row { display: flex; gap: 10px; width: 100%; }
         .btn-row button { flex: 1; }
@@ -144,15 +144,22 @@
             padding: 20px 40px; background: #1e1e1e; border-top: 1px solid #444; box-shadow: 0 -4px 15px rgba(0,0,0,0.6);
             justify-content: center; align-items: stretch; z-index: 100; box-sizing: border-box; flex-wrap: wrap; max-height: 35vh; overflow-y: auto;
         }
-        .footer-col { display: flex; flex-direction: column; gap: 15px; flex: 1; min-width: 180px; max-width: 280px; }
+        .footer-col { display: flex; flex-direction: column; gap: 15px; flex: 1; min-width: 180px; max-width: 250px; }
         .footer-block { background: #2a2a2a; padding: 15px; border-radius: 8px; border: 1px solid #333; display: flex; flex-direction: column; gap: 10px; height: 100%; box-sizing: border-box; }
         .footer-block label { font-weight: bold; color: #fff; font-size: 13px; }
 
-        .credits-box { background: #252525; padding: 15px; border-radius: 8px; border: 1px solid #444; font-size: 12px; color: #aaa; line-height: 1.5; text-align: center; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
+        .credits-box { background: #252525; padding: 15px; border-radius: 8px; border: 1px solid #444; font-size: 12px; color: #aaa; line-height: 1.5; text-align: center; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center;}
         .credits-box h3 { margin: 0 0 8px 0; font-size: 14px; color: #fff; }
         .credits-box a { color: #3498db; text-decoration: none; font-weight: bold; }
         .credits-box a:hover { text-decoration: underline; }
         .credits-box .tip-jar { display: inline-block; margin-top: 8px; padding: 6px 12px; background: #e67e22; color: white; border-radius: 4px; }
+        
+        .gemini-charm {
+            margin-top: 12px; display: inline-block; background: #1a1a1a;
+            padding: 5px 12px; border-radius: 12px; font-size: 10px;
+            border: 1px solid #444; color: #ccc;
+        }
+        .gemini-charm span { color: #3498db; font-weight: bold; }
 
         /* Print Settings */
         @media print {
@@ -162,7 +169,7 @@
             .content-wrapper { margin-top: 0; display: block; height: auto; overflow: visible; }
             .main { padding: 0; overflow: visible; display: block; }
             .page { box-shadow: none; width: 100%; height: auto; min-height: 0; padding: 0; display: block; }
-            .pawn-wrapper { display: inline-block; margin: 0 0.25in 0.25in 0; padding: 0; border: none; background: transparent; page-break-inside: avoid; }
+            .pawn-wrapper { display: inline-block; margin: 0 0.25in 0.25in 0; padding: 0; border: none; background: transparent; page-break-inside: avoid; vertical-align: top; }
             .action-group-left, .action-group-right, .edit-toggle-btn, .pawn-settings, .credits-footer { display: none !important; }
         }
     </style>
@@ -193,7 +200,7 @@
         <footer class="credits-footer">
             <div class="footer-col">
                 <div class="footer-block">
-                    <label>1. Add Images</label>
+                    <label>Add Images</label>
                     <p style="font-size: 11px; margin: 0; color: #aaa;">Drop transparent PNGs, browse, or paste from clipboard.</p>
                     <div class="export-col">
                         <button class="secondary" onclick="document.getElementById('file-input').click()">Browse Files...</button>
@@ -202,9 +209,10 @@
                     </div>
                 </div>
             </div>
+            
             <div class="footer-col">
                 <div class="footer-block">
-                    <label>2. Save / Load Project</label>
+                    <label>Save / Load Project</label>
                     <p style="font-size: 11px; margin: 0; color: #aaa;">Export your entire workspace configuration as a JSON file.</p>
                     <div class="btn-row">
                         <button class="secondary" onclick="saveProject()">Save</button>
@@ -213,6 +221,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="footer-col">
                 <div class="credits-box">
                     <h3>Inspired By Whitebeard</h3>
@@ -220,13 +229,24 @@
                     <a href="https://ko-fi.com/whitebeard" target="_blank" class="tip-jar">☕ Drop a tip in their jar!</a>
                 </div>
             </div>
+            
+            <div class="footer-col">
+                <div class="credits-box">
+                    <h3>Custom Setup & Logic</h3>
+                    <p>Expanded capabilities, stat blocks, styling controls, and export tools.</p>
+                    <a href="https://trifold.gameportal.win" target="_blank">trifold.gameportal.win</a>
+                    <div class="gemini-charm">✨ Vibe developed with <span>Gemini 3.1 Pro</span></div>
+                </div>
+            </div>
+
             <div class="footer-col">
                 <div class="footer-block">
-                    <label>3. Print & Export</label>
+                    <label>Print & Export</label>
                     <div class="export-col">
+                        <button class="secondary" onclick="sortPawns()" style="background:#2ecc71; border:none;">Sort by Size (Auto-Pack)</button>
                         <button class="primary" onclick="handlePrint()">Print / PDF</button>
-                        <button class="primary word-btn" onclick="exportWord()">Export to Word (.doc)</button>
-                        <button class="primary odt-btn" onclick="exportODT()">Export to OpenDoc (.odt)</button>
+                        <button class="primary word-btn" onclick="exportWord()">Export to Word</button>
+                        <button class="primary odt-btn" onclick="exportODT()">Export to OpenDoc</button>
                     </div>
                 </div>
             </div>
@@ -380,6 +400,18 @@
             const editBtn = document.getElementById(`edit-btn-${index}`);
             if (state.pawns[index].isEditing) { settingsDiv.style.display = 'flex'; editBtn.innerHTML = '▲ Hide Controls'; } 
             else { settingsDiv.style.display = 'none'; editBtn.innerHTML = '▼ Edit Controls'; }
+        }
+
+        function sortPawns() {
+            state.pawns.sort((a, b) => {
+                const sizeA = SIZES[a.size] || SIZES['monster'];
+                const sizeB = SIZES[b.size] || SIZES['monster'];
+                if (sizeB.w !== sizeA.w) {
+                    return sizeB.w - sizeA.w; // Sort widest to narrowest
+                }
+                return sizeB.h - sizeA.h; // If widths tie, sort tallest to shortest
+            });
+            renderAll();
         }
 
         function updatePawnValue(index, field, value) {
@@ -625,7 +657,6 @@
                 ctx.save();
                 ctx.translate(xCenter, yCenter);
                 
-                // Mirror back panel so physical silhouettes line up when folded
                 let shouldFlip = isBack ? !pawn.isFlipped : pawn.isFlipped;
                 if (shouldFlip) ctx.scale(-1, 1);
                 ctx.translate(shiftX, 0); 
@@ -635,7 +666,6 @@
                 ctx.drawImage(pawn.img, -w/2, -h/2, w, h);
                 ctx.restore();
 
-                // Draw X if shadow back is active
                 if (isBack && pawn.isDark) {
                     ctx.save(); ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 6; ctx.setLineDash([]);
                     const p = Math.floor(panelW * 0.15); ctx.beginPath();
@@ -672,7 +702,6 @@
                 }
             }
 
-            // 1. Draw Back Tail (Upside Down)
             if (pawn.hasBackTail) {
                 ctx.save(); ctx.translate(panelW, backTailH); ctx.rotate(Math.PI);
                 ctx.fillStyle = '#e8e8e8'; ctx.fillRect(0, 0, panelW, backTailH);
@@ -690,23 +719,18 @@
                 ctx.restore();
             }
 
-            // 2. Draw Back Panel (Upside Down)
             ctx.save(); ctx.translate(panelW, backTailH + panelH); ctx.rotate(Math.PI); drawPanelContent(ctx, true); ctx.restore();
-
-            // 3. Draw Front Panel (Upright)
             ctx.save(); ctx.translate(0, backTailH + panelH); drawPanelContent(ctx, false); ctx.restore();
 
-            // 4. Draw Front Tail (Upright)
             if (pawn.hasFrontTail) {
                 ctx.save(); ctx.translate(0, backTailH + 2 * panelH);
                 ctx.fillStyle = '#e8e8e8'; ctx.fillRect(0, 0, panelW, frontTailH);
                 ctx.restore();
             }
 
-            // Fold Lines & Outlines
             ctx.strokeStyle = '#888'; ctx.lineWidth = 2; ctx.setLineDash([15, 15]);
             if (pawn.hasBackTail) { ctx.beginPath(); ctx.moveTo(0, backTailH); ctx.lineTo(panelW, backTailH); ctx.stroke(); }
-            ctx.beginPath(); ctx.moveTo(0, backTailH + panelH); ctx.lineTo(panelW, backTailH + panelH); ctx.stroke(); // Center fold
+            ctx.beginPath(); ctx.moveTo(0, backTailH + panelH); ctx.lineTo(panelW, backTailH + panelH); ctx.stroke(); 
             if (pawn.hasFrontTail) { ctx.beginPath(); ctx.moveTo(0, backTailH + 2 * panelH); ctx.lineTo(panelW, backTailH + 2 * panelH); ctx.stroke(); }
 
             ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 4; ctx.setLineDash([]); ctx.strokeRect(0, 0, totalW, totalH);
