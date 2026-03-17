@@ -830,7 +830,7 @@
         function drawPawnCanvas(pawn) {
             const canvas = document.createElement('canvas');
             const printDPI = 300; 
-            const panels = 4; // Updated: 0=Blank Front Base, 1=Front, 2=Back, 3=Tail
+            const panels = 4; // 0=Blank Front Base, 1=Front Face, 2=Back Face, 3=Tail
             
             const pSize = SIZES[pawn.size] || SIZES['monster'];
             const internalPanelWidth = pSize.w * printDPI;
@@ -859,8 +859,9 @@
                 // Shift to center of the current panel to manage rotations
                 ctx.translate(internalPanelWidth / 2, yBase + internalPanelHeight / 2);
                 
-                // Rotate the Front (Panel 1) and Back (Panel 2) by 180 degrees 
-                if (i === 1 || i === 2) {
+                // Front Leaf (0) and Front Face (1) fold UP/UNDER, so they are rotated 180 on the flat page.
+                // Back Face (2) and Tail (3) fold DOWN/OUT, so they face upright (0 degrees) on the flat page.
+                if (i === 0 || i === 1) {
                     ctx.rotate(Math.PI);
                 }
 
@@ -872,10 +873,8 @@
                 ctx.rect(localX, localY, internalPanelWidth, internalPanelHeight); 
                 ctx.clip();
 
-                // Draw Graphics ONLY on Front (1) and Back (2)
-                if (i === 1 || i === 2) {
-                    let shouldFlip = (i === 2) ? !pawn.isFlipped : pawn.isFlipped;
-
+                // Draw Graphic ONLY on Front Face (1)
+                if (i === 1) {
                     const margin = internalPanelHeight * 0.05;
                     const availableHeight = internalPanelHeight - margin - reservedBottom;
 
@@ -888,23 +887,24 @@
                     
                     const imgYCenter = localY + internalPanelHeight - (h / 2) - (margin / 2) - reservedBottom + shiftY;
 
-                    if (i === 2 && pawn.isDark) {
-                        ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 6; ctx.setLineDash([]);
-                        const p = Math.floor(internalPanelWidth * 0.1); 
-                        ctx.beginPath();
-                        ctx.moveTo(localX + p, localY + p); 
-                        ctx.lineTo(localX + internalPanelWidth - p, localY + internalPanelHeight - p);
-                        ctx.moveTo(localX + internalPanelWidth - p, localY + p); 
-                        ctx.lineTo(localX + p, localY + internalPanelHeight - p);
-                        ctx.stroke();
-                    } else {
-                        ctx.save();
-                        ctx.translate(shiftX, imgYCenter);
-                        if (shouldFlip) ctx.scale(-1, 1);
-                        ctx.rotate((pawn.rotation * Math.PI) / 180);
-                        ctx.drawImage(pawn.img, -w/2, -h/2, w, h);
-                        ctx.restore();
-                    }
+                    ctx.save();
+                    ctx.translate(shiftX, imgYCenter);
+                    if (pawn.isFlipped) ctx.scale(-1, 1);
+                    ctx.rotate((pawn.rotation * Math.PI) / 180);
+                    ctx.drawImage(pawn.img, -w/2, -h/2, w, h);
+                    ctx.restore();
+                }
+
+                // Keep the 'X' drawing capability on the Back Face (2) if 'X Base' toggle is checked
+                if (i === 2 && pawn.isDark) {
+                    ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 6; ctx.setLineDash([]);
+                    const p = Math.floor(internalPanelWidth * 0.1); 
+                    ctx.beginPath();
+                    ctx.moveTo(localX + p, localY + p); 
+                    ctx.lineTo(localX + internalPanelWidth - p, localY + internalPanelHeight - p);
+                    ctx.moveTo(localX + internalPanelWidth - p, localY + p); 
+                    ctx.lineTo(localX + p, localY + internalPanelHeight - p);
+                    ctx.stroke();
                 }
 
                 // Reusable stat block drawing in local space
@@ -938,7 +938,7 @@
                     }
                 };
 
-                // Draw Stats on Back (2) or Tail (3)
+                // Draw Stats on Back Face (2) or Tail (3)
                 if (i === 2 && pawn.statsOnBack) drawStatsBlockLocal();
                 if (i === 3 && !pawn.statsOnBack) drawStatsBlockLocal();
 
