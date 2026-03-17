@@ -293,14 +293,26 @@
 
         /* Print Settings */
         @media print {
-            @page { margin: 0.5in; size: letter portrait; }
+            @page { margin: 0.25in; size: letter portrait; } /* Reduced margins */
             body { background: white; height: auto; }
             .top-header { display: none !important; }
             .content-wrapper { margin-top: 0; display: block; height: auto; overflow: visible; }
             .main { padding: 0; overflow: visible; display: block; }
-            .page { box-shadow: none; width: 100%; height: auto; min-height: 0; padding: 0; display: block; }
-            .pawn-wrapper { display: inline-block; margin: 0 0.25in 0.25in 0; padding: 0; border: none; background: transparent; page-break-inside: avoid; }
+            .page { box-shadow: none; width: 100%; height: auto; min-height: 0; padding: 0; display: block; background: transparent; }
+            .pawn-wrapper { 
+                display: inline-block; 
+                margin: 0 0.15in 0.15in 0; /* Tighter packing */
+                padding: 0; 
+                border: none; 
+                background: transparent; 
+                page-break-inside: avoid; 
+                break-inside: avoid; /* Prevents tearing across pages */
+            }
             .action-group-left, .action-group-right, .edit-toggle-btn, .pawn-settings, .credits-footer { display: none !important; }
+            canvas {
+                max-width: 100%;
+                max-height: 10.4in; /* Hard stop to prevent spillover */
+            }
         }
     </style>
 </head>
@@ -389,6 +401,7 @@
         let styleClipboard = null; 
         const STAT_KEYS = ["Init", "AC", "HP", "P.D.", "C.D.", "S.D.", "Inv.", "Foc"];
 
+        // Updated SIZES: Adjusted Legendary to safely fit inside letter/A4 page margins (4 panels x 2.4" = 9.6" height total)
         const SIZES = {
             'minion': { w: 0.5, h: 0.75, label: 'Minion (0.5")' },
             'pc': { w: 1.0, h: 1.5, label: 'Player Character (1")' },
@@ -397,7 +410,7 @@
             'boss': { w: 2.0, h: 3.0, label: 'Boss (2")' },
             'malkovich': { w: 2.5, h: 3.5, label: 'Malkovich (2.5")' },
             'epic': { w: 3.0, h: 3.5, label: 'Epic (3")' },
-            'legendary': { w: 7.25, h: 3.5, label: 'Legendary (Full Page)' }
+            'legendary': { w: 7.0, h: 2.4, label: 'Legendary (Full Page)' }
         };
 
         const pageEl = document.getElementById('page');
