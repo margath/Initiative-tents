@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Initiative Paper Tent Generator</title>
+    <title>The Tri-Fold Pawn Maker</title>
     <style>
         body {
             font-family: system-ui, -apple-system, sans-serif;
@@ -317,8 +317,8 @@
         </div>
         
         <div class="header-titles">
-            <h1>Initiative Paper Tent Generator</h1>
-            <p>Paper tents with individual layering, stats, and GM tracker controls.</p>
+            <h1>The Tri-Fold Pawn Maker</h1>
+            <p>Triangular standees with individual layering, border, stats, and text controls.</p>
         </div>
 
         <div class="header-right"></div>
@@ -361,16 +361,7 @@
                     <a href="https://ko-fi.com/whitebeard" target="_blank" class="tip-jar">☕ Drop a tip in their jar!</a>
                 </div>
             </div>
-            
-            <div class="footer-col">
-                <div class="credits-box">
-                    <h3>Prompt Engineered</h3>
-                    <p>Expanded capabilities, stat blocks, styling controls, and export tools.</p>
-                    <a href="https://tools.gameportal.win" target="_blank">tools.gameportal.win</a>
-                    <div class="gemini-charm">✨ Vibe developed with <span>Gemini 3.1 Pro</span></div>
-                </div>
-            </div>
-            
+
             <div class="footer-col">
                 <div class="footer-block">
                     <label>3. Print & Export</label>
@@ -395,9 +386,9 @@
             'monster': { w: 1.0, h: 1.5, label: 'Monster (1")' },
             'busey': { w: 1.25, h: 1.875, label: 'Busey (1.25")' },
             'boss': { w: 2.0, h: 3.0, label: 'Boss (2")' },
-            'malkovich': { w: 2.5, h: 3.5, label: 'Malkovich (2.5")' },
-            'epic': { w: 3.0, h: 3.5, label: 'Epic (3")' },
-            'legendary': { w: 7.25, h: 3.5, label: 'Legendary (Full Page)' }
+            'malkovich': { w: 2.5, h: 3.75, label: 'Malkovich (2.5")' },
+            'epic': { w: 3.0, h: 4.5, label: 'Epic (3")' },
+            'legendary': { w: 2.6, h: 10.0, label: 'Legendary (Full Page)' }
         };
 
         const pageEl = document.getElementById('page');
@@ -829,107 +820,79 @@
 
         function drawPawnCanvas(pawn) {
             const canvas = document.createElement('canvas');
-            const printDPI = 300; 
-            const tabHeightInches = 0.25; 
-            const panels = 3;
+            const printDPI = 300; const tabWidthInches = 0.25; const panels = 3;
             
             const pSize = SIZES[pawn.size] || SIZES['monster'];
-            
-            // For a vertical tent layout: The width of the strip is the width of the tent face.
+            const internalTabWidth = tabWidthInches * printDPI; 
             const internalPanelWidth = pSize.w * printDPI;
-            // The height of each panel is the slope height of the tent.
-            const internalPanelHeight = pSize.h * printDPI;
-            const tabHeightPx = tabHeightInches * printDPI;
-
-            const internalWidth = internalPanelWidth; 
-            const internalHeight = (internalPanelHeight * panels) + tabHeightPx;
+            const internalWidth = (internalPanelWidth * panels) + internalTabWidth; 
+            const internalHeight = pSize.h * printDPI;
 
             canvas.width = internalWidth; canvas.height = internalHeight;
-            canvas.style.width = pSize.w + "in"; 
-            canvas.style.height = (pSize.h * panels + tabHeightInches) + "in";
+            canvas.style.width = (pSize.w * panels + tabWidthInches) + "in"; canvas.style.height = pSize.h + "in";
 
             const ctx = canvas.getContext('2d');
             ctx.fillStyle = 'white'; ctx.fillRect(0, 0, internalWidth, internalHeight);
             ctx.strokeStyle = '#888'; ctx.lineWidth = 2; ctx.setLineDash([15, 15]);
 
-            const textHeight = Math.floor(internalPanelHeight * 0.1); 
-            const textPaddingBottom = Math.floor(internalPanelHeight * 0.03);
+            const textHeight = Math.floor(internalHeight * 0.1); const textPaddingBottom = Math.floor(internalHeight * 0.03);
             const hasText = pawn.name.trim() !== '' || pawn.number.trim() !== '';
             const reservedBottom = hasText ? textHeight + textPaddingBottom : 0; 
 
             for (let i = 0; i < panels; i++) {
-                let yBase = i * internalPanelHeight;
+                let xBase = i * internalPanelWidth;
                 ctx.save();
                 
-                // Shift to center of the current panel to manage rotations
-                ctx.translate(internalPanelWidth / 2, yBase + internalPanelHeight / 2);
-                
-                // Rotate Front (Panel 0) and Base/Tail (Panel 2) by 180 degrees
-                if (i === 0 || i === 2) {
-                    ctx.rotate(Math.PI);
-                }
-
-                // Define local coordinate box now that we are centered
-                const localX = -internalPanelWidth / 2;
-                const localY = -internalPanelHeight / 2;
-
-                ctx.beginPath(); 
-                ctx.rect(localX, localY, internalPanelWidth, internalPanelHeight); 
-                ctx.clip();
-
-                // If flipping images, making the front facing opposite of the back in local space 
-                // means they physically point the same direction on the table!
-                let shouldFlip = (i === 1) ? !pawn.isFlipped : pawn.isFlipped;
-
-                const margin = internalPanelHeight * 0.05;
-                const availableHeight = internalPanelHeight - margin - reservedBottom;
+                const margin = internalHeight * 0.05;
+                const availableHeight = internalHeight - margin - reservedBottom;
 
                 const autoScale = Math.min(internalPanelWidth / pawn.img.width, availableHeight / pawn.img.height) * 0.95; 
                 const finalScale = autoScale * pawn.scale;
-                const w = pawn.img.width * finalScale; 
-                const h = pawn.img.height * finalScale;
-                const shiftX = pawn.offsetX * (printDPI / 100); 
-                const shiftY = pawn.offsetY * (printDPI / 100);
+                const w = pawn.img.width * finalScale; const h = pawn.img.height * finalScale;
+                const shiftX = pawn.offsetX * (printDPI / 100); const shiftY = pawn.offsetY * (printDPI / 100);
                 
-                const imgYCenter = localY + internalPanelHeight - (h / 2) - (margin / 2) - reservedBottom + shiftY;
+                const xCenter = xBase + (internalPanelWidth / 2);
+                const yCenter = internalHeight - (h / 2) - (margin / 2) - reservedBottom + shiftY;
+
+                ctx.beginPath(); ctx.rect(xBase, 0, internalPanelWidth, internalHeight); ctx.clip();
+
+                let shouldFlip = (i === 1) ? !pawn.isFlipped : pawn.isFlipped;
 
                 if (i === 2 && pawn.isDark) {
                     ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 6; ctx.setLineDash([]);
-                    const p = Math.floor(internalPanelWidth * 0.1); 
-                    ctx.beginPath();
-                    ctx.moveTo(localX + p, localY + p); 
-                    ctx.lineTo(localX + internalPanelWidth - p, localY + internalPanelHeight - p);
-                    ctx.moveTo(localX + internalPanelWidth - p, localY + p); 
-                    ctx.lineTo(localX + p, localY + internalPanelHeight - p);
+                    const p = Math.floor(internalPanelWidth * 0.1); ctx.beginPath();
+                    ctx.moveTo(xBase + p, p); ctx.lineTo(xBase + internalPanelWidth - p, internalHeight - p);
+                    ctx.moveTo(xBase + internalPanelWidth - p, p); ctx.lineTo(xBase + p, internalHeight - p);
                     ctx.stroke();
                 } else {
                     ctx.save();
-                    ctx.translate(shiftX, imgYCenter);
+                    ctx.translate(xCenter, yCenter);
                     if (shouldFlip) ctx.scale(-1, 1);
+                    ctx.translate(shiftX, 0);
                     ctx.rotate((pawn.rotation * Math.PI) / 180);
                     if (i === 2) ctx.filter = 'brightness(0)'; 
                     
                     ctx.drawImage(pawn.img, -w/2, -h/2, w, h);
                     ctx.restore();
                 }
+                ctx.restore(); 
 
-                // Reusable stat block drawing in local space
-                const drawStatsBlockLocal = () => {
+                const drawStatsBlock = () => {
                     const activeStats = STAT_KEYS.filter(key => pawn.stats[key] && pawn.stats[key].trim() !== '');
                     if (activeStats.length > 0) {
                         ctx.save();
                         const boxW = internalPanelWidth * 0.42; 
-                        const boxH = Math.floor(internalPanelHeight * 0.15); 
+                        const boxH = Math.floor(internalPanelWidth * 0.15); 
                         const pad = Math.floor(internalPanelWidth * 0.03);
                         const labelFont = Math.floor(internalPanelWidth * 0.065);
                         const valFont = Math.floor(internalPanelWidth * 0.08);
 
-                        const startYLocal = localY + internalPanelHeight * 0.08; 
-                        const startXLocal = localX + (internalPanelWidth - (2 * boxW + pad)) / 2;
+                        const startY = internalHeight * 0.08; 
+                        const startX = xBase + (internalPanelWidth - (2 * boxW + pad)) / 2;
 
                         activeStats.forEach((key, idx) => {
                             const col = idx % 2; const row = Math.floor(idx / 2);
-                            const x = startXLocal + col * (boxW + pad); const y = startYLocal + row * (boxH + pad);
+                            const x = startX + col * (boxW + pad); const y = startY + row * (boxH + pad);
 
                             ctx.fillStyle = pawn.textBgColor; ctx.fillRect(x, y, boxW, boxH);
                             ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 3; ctx.setLineDash([]); ctx.strokeRect(x, y, boxW, boxH);
@@ -944,96 +907,90 @@
                     }
                 };
 
-                if (i === 1 && pawn.statsOnBack) drawStatsBlockLocal();
-                if (i === 2 && !pawn.statsOnBack) drawStatsBlockLocal();
+                if (i === 1 && pawn.statsOnBack) drawStatsBlock();
+                if (i === 2 && !pawn.statsOnBack) drawStatsBlock();
 
-                // Draw Trackers on Base Panel (i === 2) in local space
+                // Draw Trackers on Base Panel (i === 2)
                 if (i === 2) {
                     ctx.save();
-                    let currentYLocal = localY + internalPanelHeight * 0.15;
-                    const drawTrackerRowLocal = (label, count) => {
+                    let currentY = internalHeight * 0.15;
+                    const drawTrackerRow = (label, count) => {
                         if (!count || isNaN(count) || count <= 0) return;
                         ctx.fillStyle = pawn.textColor;
                         ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
                         const fontSize = Math.floor(internalPanelWidth * 0.07);
                         ctx.font = `bold ${fontSize}px sans-serif`;
-                        ctx.fillText(label, localX + (internalPanelWidth * 0.08), currentYLocal);
+                        ctx.fillText(label, xBase + (internalPanelWidth * 0.08), currentY);
 
                         const circleRadius = internalPanelWidth * 0.035;
-                        const startX = localX + internalPanelWidth - (internalPanelWidth * 0.08) - (count * circleRadius * 2.5);
+                        const startX = xBase + internalPanelWidth - (internalPanelWidth * 0.08) - (count * circleRadius * 2.5);
                         ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 3; ctx.setLineDash([]);
                         
                         for(let j=0; j<count; j++) {
                             ctx.beginPath();
-                            ctx.arc(startX + (j * circleRadius * 2.5) + circleRadius, currentYLocal, circleRadius, 0, Math.PI*2);
+                            ctx.arc(startX + (j * circleRadius * 2.5) + circleRadius, currentY, circleRadius, 0, Math.PI*2);
                             ctx.stroke();
                         }
-                        currentYLocal += circleRadius * 3.5;
+                        currentY += circleRadius * 3.5;
                     };
 
-                    drawTrackerRowLocal("Leg. Resist", parseInt(pawn.trackers.legRes));
-                    drawTrackerRowLocal("Focus", parseInt(pawn.trackers.focus));
-                    drawTrackerRowLocal("Investiture", parseInt(pawn.trackers.investiture));
+                    drawTrackerRow("Leg. Resist", parseInt(pawn.trackers.legRes));
+                    drawTrackerRow("Focus", parseInt(pawn.trackers.focus));
+                    drawTrackerRow("Investiture", parseInt(pawn.trackers.investiture));
                     ctx.restore();
                 }
 
                 if (pawn.showBorder) {
                     ctx.save();
                     ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 12; ctx.setLineDash([]);
-                    ctx.strokeRect(localX + 6, localY + 6, internalPanelWidth - 12, internalPanelHeight - 12);
+                    ctx.strokeRect(xBase + 6, 6, internalPanelWidth - 12, internalHeight - 12);
                     ctx.restore();
                 }
 
-                // Draw Text Banner in local space
-                let displayText = pawn.name;
-                if (pawn.number) { displayText += displayText ? ` #${pawn.number}` : `#${pawn.number}`; }
-                if (displayText) {
-                    const x = 0; // Text is horizontally centered on 0,0 locally
-                    const y = localY + internalPanelHeight - textPaddingBottom;
-                    const barHeight = reservedBottom;
+                drawText(ctx, pawn, xBase, internalPanelWidth, internalHeight, reservedBottom, textPaddingBottom);
 
-                    if (pawn.textBgColor) {
-                        ctx.save(); ctx.fillStyle = pawn.textBgColor; 
-                        ctx.fillRect(localX, localY + internalPanelHeight - barHeight, internalPanelWidth, barHeight);
-                        ctx.restore();
-                    }
-
-                    ctx.save();
-                    const fontSize = Math.floor(internalPanelWidth * 0.1);
-                    ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.font = `bold ${fontSize}px sans-serif`;
-                    ctx.lineWidth = Math.floor(fontSize * 0.2); ctx.strokeStyle = 'white'; ctx.strokeText(displayText, x, y);
-                    ctx.fillStyle = pawn.textColor; ctx.fillText(displayText, x, y);
-                    ctx.restore();
-                }
-
-                ctx.restore(); // Restore to global canvas space
-
-                // Horizontal Fold Lines
                 if (i < panels - 1) {
                     ctx.setLineDash([15, 15]); ctx.strokeStyle = '#888'; ctx.lineWidth = 2;
-                    ctx.beginPath(); 
-                    ctx.moveTo(0, yBase + internalPanelHeight); 
-                    ctx.lineTo(internalPanelWidth, yBase + internalPanelHeight); 
-                    ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(xBase + internalPanelWidth, 0); ctx.lineTo(xBase + internalPanelWidth, internalHeight); ctx.stroke();
                 }
             }
 
-            // Bottom Glue Tab
-            let yTab = panels * internalPanelHeight;
+            let xTab = panels * internalPanelWidth;
             ctx.setLineDash([]); ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 4;
-            ctx.beginPath(); ctx.moveTo(0, yTab); ctx.lineTo(internalPanelWidth, yTab); ctx.stroke();
-            ctx.fillStyle = '#e8e8e8'; ctx.fillRect(0, yTab, internalPanelWidth, tabHeightPx);
+            ctx.beginPath(); ctx.moveTo(xTab, 0); ctx.lineTo(xTab, internalHeight); ctx.stroke();
+            ctx.fillStyle = '#e8e8e8'; ctx.fillRect(xTab, 0, internalTabWidth, internalHeight);
             
             ctx.save();
-            ctx.fillStyle = pawn.borderColor; 
-            ctx.translate(internalPanelWidth / 2, yTab + tabHeightPx / 2);
-            ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            ctx.fillStyle = pawn.borderColor; ctx.translate(xTab + internalTabWidth/2, internalHeight/2);
+            ctx.rotate(-Math.PI/2); ctx.textAlign = "center"; ctx.textBaseline = "middle";
             ctx.font = "bold 28px sans-serif"; ctx.fillText("GLUE", 0, 0);
             ctx.restore();
 
-            // Outer Perimeter Cut Line
             ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 4; ctx.strokeRect(0, 0, internalWidth, internalHeight);
             return canvas;
+        }
+
+        function drawText(ctx, pawn, xBase, panelWidth, panelHeight, reservedBottom, paddingBottom) {
+            let displayText = pawn.name;
+            if (pawn.number) { displayText += displayText ? ` #${pawn.number}` : `#${pawn.number}`; }
+            if (!displayText) return;
+
+            const x = xBase + panelWidth / 2;
+            const y = panelHeight - paddingBottom;
+            const barHeight = reservedBottom;
+
+            if (pawn.textBgColor) {
+                ctx.save(); ctx.fillStyle = pawn.textBgColor; 
+                ctx.fillRect(xBase, panelHeight - barHeight, panelWidth, barHeight);
+                ctx.restore();
+            }
+
+            ctx.save();
+            const fontSize = Math.floor(panelWidth * 0.1);
+            ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.font = `bold ${fontSize}px sans-serif`;
+            ctx.lineWidth = Math.floor(fontSize * 0.2); ctx.strokeStyle = 'white'; ctx.strokeText(displayText, x, y);
+            ctx.fillStyle = pawn.textColor; ctx.fillText(displayText, x, y);
+            ctx.restore();
         }
     </script>
 </body>
