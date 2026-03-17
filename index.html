@@ -318,7 +318,7 @@
         
         <div class="header-titles">
             <h1>Initiative Paper Tent Generator</h1>
-            <p>Paper tents with individual layering, stats, and GM tracker controls.</p>
+            <p>Inverted-T standees with individual layering, stats, and GM tracker controls.</p>
         </div>
 
         <div class="header-right"></div>
@@ -830,23 +830,18 @@
         function drawPawnCanvas(pawn) {
             const canvas = document.createElement('canvas');
             const printDPI = 300; 
-            const tabHeightInches = 0.25; 
-            const panels = 3;
+            const panels = 4; // Updated: 0=Blank Front Base, 1=Front, 2=Back, 3=Tail
             
             const pSize = SIZES[pawn.size] || SIZES['monster'];
-            
-            // For a vertical tent layout: The width of the strip is the width of the tent face.
             const internalPanelWidth = pSize.w * printDPI;
-            // The height of each panel is the slope height of the tent.
             const internalPanelHeight = pSize.h * printDPI;
-            const tabHeightPx = tabHeightInches * printDPI;
 
             const internalWidth = internalPanelWidth; 
-            const internalHeight = (internalPanelHeight * panels) + tabHeightPx;
+            const internalHeight = (internalPanelHeight * panels);
 
             canvas.width = internalWidth; canvas.height = internalHeight;
             canvas.style.width = pSize.w + "in"; 
-            canvas.style.height = (pSize.h * panels + tabHeightInches) + "in";
+            canvas.style.height = (pSize.h * panels) + "in";
 
             const ctx = canvas.getContext('2d');
             ctx.fillStyle = 'white'; ctx.fillRect(0, 0, internalWidth, internalHeight);
@@ -864,8 +859,8 @@
                 // Shift to center of the current panel to manage rotations
                 ctx.translate(internalPanelWidth / 2, yBase + internalPanelHeight / 2);
                 
-                // Rotate the middle panel (Panel 1) by 180 degrees to flip the entire pawn's orientation on the canvas
-                if (i === 1) {
+                // Rotate the Front (Panel 1) and Back (Panel 2) by 180 degrees 
+                if (i === 1 || i === 2) {
                     ctx.rotate(Math.PI);
                 }
 
@@ -877,40 +872,39 @@
                 ctx.rect(localX, localY, internalPanelWidth, internalPanelHeight); 
                 ctx.clip();
 
-                // If flipping images, making the front facing opposite of the back in local space 
-                // means they physically point the same direction on the table!
-                let shouldFlip = (i === 1) ? !pawn.isFlipped : pawn.isFlipped;
+                // Draw Graphics ONLY on Front (1) and Back (2)
+                if (i === 1 || i === 2) {
+                    let shouldFlip = (i === 2) ? !pawn.isFlipped : pawn.isFlipped;
 
-                const margin = internalPanelHeight * 0.05;
-                const availableHeight = internalPanelHeight - margin - reservedBottom;
+                    const margin = internalPanelHeight * 0.05;
+                    const availableHeight = internalPanelHeight - margin - reservedBottom;
 
-                const autoScale = Math.min(internalPanelWidth / pawn.img.width, availableHeight / pawn.img.height) * 0.95; 
-                const finalScale = autoScale * pawn.scale;
-                const w = pawn.img.width * finalScale; 
-                const h = pawn.img.height * finalScale;
-                const shiftX = pawn.offsetX * (printDPI / 100); 
-                const shiftY = pawn.offsetY * (printDPI / 100);
-                
-                const imgYCenter = localY + internalPanelHeight - (h / 2) - (margin / 2) - reservedBottom + shiftY;
-
-                if (i === 2 && pawn.isDark) {
-                    ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 6; ctx.setLineDash([]);
-                    const p = Math.floor(internalPanelWidth * 0.1); 
-                    ctx.beginPath();
-                    ctx.moveTo(localX + p, localY + p); 
-                    ctx.lineTo(localX + internalPanelWidth - p, localY + internalPanelHeight - p);
-                    ctx.moveTo(localX + internalPanelWidth - p, localY + p); 
-                    ctx.lineTo(localX + p, localY + internalPanelHeight - p);
-                    ctx.stroke();
-                } else {
-                    ctx.save();
-                    ctx.translate(shiftX, imgYCenter);
-                    if (shouldFlip) ctx.scale(-1, 1);
-                    ctx.rotate((pawn.rotation * Math.PI) / 180);
-                    if (i === 2) ctx.filter = 'brightness(0)'; 
+                    const autoScale = Math.min(internalPanelWidth / pawn.img.width, availableHeight / pawn.img.height) * 0.95; 
+                    const finalScale = autoScale * pawn.scale;
+                    const w = pawn.img.width * finalScale; 
+                    const h = pawn.img.height * finalScale;
+                    const shiftX = pawn.offsetX * (printDPI / 100); 
+                    const shiftY = pawn.offsetY * (printDPI / 100);
                     
-                    ctx.drawImage(pawn.img, -w/2, -h/2, w, h);
-                    ctx.restore();
+                    const imgYCenter = localY + internalPanelHeight - (h / 2) - (margin / 2) - reservedBottom + shiftY;
+
+                    if (i === 2 && pawn.isDark) {
+                        ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 6; ctx.setLineDash([]);
+                        const p = Math.floor(internalPanelWidth * 0.1); 
+                        ctx.beginPath();
+                        ctx.moveTo(localX + p, localY + p); 
+                        ctx.lineTo(localX + internalPanelWidth - p, localY + internalPanelHeight - p);
+                        ctx.moveTo(localX + internalPanelWidth - p, localY + p); 
+                        ctx.lineTo(localX + p, localY + internalPanelHeight - p);
+                        ctx.stroke();
+                    } else {
+                        ctx.save();
+                        ctx.translate(shiftX, imgYCenter);
+                        if (shouldFlip) ctx.scale(-1, 1);
+                        ctx.rotate((pawn.rotation * Math.PI) / 180);
+                        ctx.drawImage(pawn.img, -w/2, -h/2, w, h);
+                        ctx.restore();
+                    }
                 }
 
                 // Reusable stat block drawing in local space
@@ -944,11 +938,12 @@
                     }
                 };
 
-                if (i === 1 && pawn.statsOnBack) drawStatsBlockLocal();
-                if (i === 2 && !pawn.statsOnBack) drawStatsBlockLocal();
+                // Draw Stats on Back (2) or Tail (3)
+                if (i === 2 && pawn.statsOnBack) drawStatsBlockLocal();
+                if (i === 3 && !pawn.statsOnBack) drawStatsBlockLocal();
 
-                // Draw Trackers on Base Panel (i === 2) in local space
-                if (i === 2) {
+                // Draw Trackers ONLY on Tail (3)
+                if (i === 3) {
                     ctx.save();
                     let currentYLocal = localY + internalPanelHeight * 0.15;
                     const drawTrackerRowLocal = (label, count) => {
@@ -977,6 +972,7 @@
                     ctx.restore();
                 }
 
+                // Optional global perimeter border applied inside panels
                 if (pawn.showBorder) {
                     ctx.save();
                     ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 12; ctx.setLineDash([]);
@@ -984,31 +980,33 @@
                     ctx.restore();
                 }
 
-                // Draw Text Banner in local space
-                let displayText = pawn.name;
-                if (pawn.number) { displayText += displayText ? ` #${pawn.number}` : `#${pawn.number}`; }
-                if (displayText) {
-                    const x = 0; // Text is horizontally centered on 0,0 locally
-                    const y = localY + internalPanelHeight - textPaddingBottom;
-                    const barHeight = reservedBottom;
+                // Draw Text Banner on all populated panels (Skip Blank Front Leaf)
+                if (i > 0) {
+                    let displayText = pawn.name;
+                    if (pawn.number) { displayText += displayText ? ` #${pawn.number}` : `#${pawn.number}`; }
+                    if (displayText) {
+                        const x = 0; // Text is horizontally centered on 0,0 locally
+                        const y = localY + internalPanelHeight - textPaddingBottom;
+                        const barHeight = reservedBottom;
 
-                    if (pawn.textBgColor) {
-                        ctx.save(); ctx.fillStyle = pawn.textBgColor; 
-                        ctx.fillRect(localX, localY + internalPanelHeight - barHeight, internalPanelWidth, barHeight);
+                        if (pawn.textBgColor) {
+                            ctx.save(); ctx.fillStyle = pawn.textBgColor; 
+                            ctx.fillRect(localX, localY + internalPanelHeight - barHeight, internalPanelWidth, barHeight);
+                            ctx.restore();
+                        }
+
+                        ctx.save();
+                        const fontSize = Math.floor(internalPanelWidth * 0.1);
+                        ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.font = `bold ${fontSize}px sans-serif`;
+                        ctx.lineWidth = Math.floor(fontSize * 0.2); ctx.strokeStyle = 'white'; ctx.strokeText(displayText, x, y);
+                        ctx.fillStyle = pawn.textColor; ctx.fillText(displayText, x, y);
                         ctx.restore();
                     }
-
-                    ctx.save();
-                    const fontSize = Math.floor(internalPanelWidth * 0.1);
-                    ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.font = `bold ${fontSize}px sans-serif`;
-                    ctx.lineWidth = Math.floor(fontSize * 0.2); ctx.strokeStyle = 'white'; ctx.strokeText(displayText, x, y);
-                    ctx.fillStyle = pawn.textColor; ctx.fillText(displayText, x, y);
-                    ctx.restore();
                 }
 
                 ctx.restore(); // Restore to global canvas space
 
-                // Horizontal Fold Lines
+                // Horizontal Fold Lines (Skip drawing below the last panel)
                 if (i < panels - 1) {
                     ctx.setLineDash([15, 15]); ctx.strokeStyle = '#888'; ctx.lineWidth = 2;
                     ctx.beginPath(); 
@@ -1018,22 +1016,10 @@
                 }
             }
 
-            // Bottom Glue Tab
-            let yTab = panels * internalPanelHeight;
-            ctx.setLineDash([]); ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 4;
-            ctx.beginPath(); ctx.moveTo(0, yTab); ctx.lineTo(internalPanelWidth, yTab); ctx.stroke();
-            ctx.fillStyle = '#e8e8e8'; ctx.fillRect(0, yTab, internalPanelWidth, tabHeightPx);
-            
-            ctx.save();
-            ctx.fillStyle = pawn.borderColor; 
-            ctx.translate(internalPanelWidth / 2, yTab + tabHeightPx / 2);
-            ctx.rotate(Math.PI); // Rotate the glue text to match the new orientation
-            ctx.textAlign = "center"; ctx.textBaseline = "middle";
-            ctx.font = "bold 28px sans-serif"; ctx.fillText("GLUE", 0, 0);
-            ctx.restore();
-
             // Outer Perimeter Cut Line
-            ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 4; ctx.strokeRect(0, 0, internalWidth, internalHeight);
+            ctx.strokeStyle = pawn.borderColor; ctx.lineWidth = 4; ctx.setLineDash([]);
+            ctx.strokeRect(0, 0, internalWidth, internalHeight);
+            
             return canvas;
         }
     </script>
